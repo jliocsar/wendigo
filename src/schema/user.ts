@@ -13,12 +13,13 @@ builder.prismaObject("User", {
 
 builder.queryType({
   fields: (t) => ({
-    hello: t.string({
+    findUserById: t.prismaField({
+      type: "User",
       args: {
         id: t.arg.id(),
       },
-      resolve: (parent, { id }) => {
-        return userService.greet(id);
+      resolve: (query, root, args, ctx, info) => {
+        return userService.greet(args.id);
       },
     }),
   }),

@@ -15,11 +15,11 @@ class UserService {
   ];
 
   public greet(id: Nullable<string | number>) {
-    const user = this.users.find((u) => u.id === id);
+    const user = this.users.find((u) => u.id == id);
     if (!user) {
       throw new Error("User not found");
     }
-    return `Hello, ${user.name || "World"}!`;
+    return user;
   }
 }
 
