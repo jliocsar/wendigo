@@ -1,5 +1,5 @@
 // exposed schema
-import "./hello";
+import "./user";
 
 // builder part
 import { builder } from "../builder";

@@ -3,10 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run --bun --watch index.ts"
+    "dev": "bun run --bun --watch src/index.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prisma": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -15,6 +18,8 @@
     "@apollo/server": "latest",
     "@elysiajs/apollo": "latest",
     "@pothos/core": "latest",
+    "@pothos/plugin-prisma": "latest",
+    "@prisma/client": "5.11.0",
     "graphql": "latest"
   }
 }
