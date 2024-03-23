@@ -1,0 +1,20 @@
+{
+  "name": "wendigo",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --bun --watch index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@apollo/server": "latest",
+    "@elysiajs/apollo": "latest",
+    "@pothos/core": "latest",
+    "graphql": "latest"
+  }
+}
