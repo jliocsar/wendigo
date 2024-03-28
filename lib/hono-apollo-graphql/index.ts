@@ -1,4 +1,5 @@
 import { Hono, type HonoRequest } from "hono";
+import { cors } from "hono/cors";
 import {
   ApolloServer,
   HeaderMap,
@@ -13,15 +14,16 @@ type ServerModule = {
 type ContextModule<Context extends BaseContext> = {
   context: ContextThunk<Context>;
 };
+type GraphQLModule<Context extends BaseContext> = ServerModule &
+  ContextModule<Context>;
 
 type ApolloOptions<
   Path extends string = "/graphql",
   Context extends BaseContext = BaseContext
 > = {
-  server: Promise<ServerModule>;
   app?: Hono;
   path?: Path;
-  context?: ContextThunk<Context> | Promise<ContextModule<Context>>;
+  root: Promise<GraphQLModule<Context>>;
 };
 
 async function parseBody(req: HonoRequest) {
@@ -37,14 +39,16 @@ export async function apollo<
   Path extends string = "/graphql",
   Context extends BaseContext = BaseContext
 >(options: ApolloOptions<Path, Context>) {
-  const app = options.app ?? new Hono();
+  let app = options.app;
+
+  if (!app) {
+    app = new Hono();
+    app.use(cors());
+  }
+
   const path = options.path ?? "/graphql";
-  const context = options.context
-    ? options.context instanceof Promise
-      ? (await options.context).context
-      : options.context
-    : async () => ({});
-  let serverModule: ServerModule;
+  let context: ContextThunk<Context>;
+  let gqlModule: GraphQLModule<Context>;
   let server: ApolloServer;
 
   app.on(["GET", "POST"], path, async (ctx) => {
@@ -52,10 +56,11 @@ export async function apollo<
 
     // lazy loads the server on the first request
     // TODO: this might be skippable if a header is present
-    if (!serverModule) {
-      serverModule = await options.server;
-      server = serverModule.server;
+    if (!gqlModule) {
+      gqlModule = await options.root;
+      server = gqlModule.server;
       server.assertStarted("Server failed to start");
+      context = gqlModule.context ?? (async () => ({}));
     }
 
     const graphQLRequestHeaders = new HeaderMap();
