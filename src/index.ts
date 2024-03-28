@@ -1,11 +1,11 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 
-import { server } from "./server";
-import { apollo } from "../lib/hono-apollo-graphql";
+import { createApolloHandler } from "../lib/hono-apollo-graphql";
 
 const app = new Hono();
-const { graphql, startApolloServer } = apollo({
-  server,
+const apollo = await createApolloHandler({
+  server: import("./server"),
   context: async () => {
     return {
       shishi: "coco",
@@ -13,8 +13,8 @@ const { graphql, startApolloServer } = apollo({
   },
 });
 
-app.mount("/graphql", graphql);
+app.use("/*", cors());
 
-await startApolloServer();
+app.mount("/graphql", apollo);
 
 export default app;

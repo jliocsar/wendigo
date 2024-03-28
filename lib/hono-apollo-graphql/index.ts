@@ -6,20 +6,39 @@ import {
   type HTTPGraphQLRequest,
   type BaseContext,
 } from "@apollo/server";
-import { server } from "../../src/server";
 
-type ApolloOptions<Context extends BaseContext> = {
+type ServerModule = {
   server: ApolloServer;
-  context?: ContextThunk<Context>;
+};
+type ContextModule<Context extends BaseContext> = {
+  context: ContextThunk<Context>;
 };
 
-export function apollo<Context extends BaseContext>(
+type ApolloOptions<Context extends BaseContext> = {
+  server: Promise<ServerModule>;
+  context?: ContextThunk<Context> | Promise<ContextModule<Context>>;
+};
+
+export async function createApolloHandler<Context extends BaseContext>(
   options: ApolloOptions<Context>
 ) {
   const app = new Hono();
-  const context = options.context ?? (async () => ({}));
+  const context = options.context
+    ? options.context instanceof Promise
+      ? (await options.context).context
+      : options.context
+    : async () => ({});
+  let serverModule: ServerModule;
+  let server: ApolloServer;
 
   app.on(["GET", "POST"], "/", async (ctx) => {
+    // lazy loads the server on the first request
+    // TODO: this might be skippable if a header is present
+    if (!serverModule) {
+      serverModule = await options.server;
+      server = serverModule.server;
+    }
+
     const graphQLRequestHeaders = new HeaderMap();
 
     for (const [key, value] of Object.entries(ctx.req.header())) {
@@ -34,10 +53,11 @@ export function apollo<Context extends BaseContext>(
     const httpGraphQLRequest: HTTPGraphQLRequest = {
       headers: graphQLRequestHeaders,
       method: ctx.req.method.toUpperCase(),
-      search: "",
+      search: new URL(ctx.req.url).search ?? "",
       body: await ctx.req.parseBody(),
     };
-    const res = await options.server.executeHTTPGraphQLRequest({
+    server.assertStarted("Server failed to start");
+    const res = await server.executeHTTPGraphQLRequest({
       httpGraphQLRequest,
       context,
     });
@@ -60,8 +80,5 @@ export function apollo<Context extends BaseContext>(
     });
   });
 
-  return {
-    startApolloServer: server.start.bind(server),
-    graphql: app.fetch.bind(app),
-  };
+  return app.fetch;
 }

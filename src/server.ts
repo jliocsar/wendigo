@@ -11,4 +11,7 @@ export const server = new ApolloServer({
       hello: () => "Hello World",
     },
   },
+  introspection: true,
 });
+
+server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
