@@ -1,5 +1,14 @@
-import { Elysia } from "elysia";
-import { apollo } from "@elysiajs/apollo";
-import schema from "./schema";
+import { ApolloServer } from "@apollo/server";
 
-export const app = new Elysia().use(apollo({ schema }));
+export const server = new ApolloServer({
+  typeDefs: `
+    type Query {
+      hello: String
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => "Hello World",
+    },
+  },
+});

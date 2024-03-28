@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --bun --watch src/index.ts",
-    "db:generate": "bun run --bun prisma/generate.ts",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
   "devDependencies": {
+    "@jliocsar/tarsier": "latest",
     "@types/bun": "latest",
     "prisma": "latest"
   },
@@ -17,10 +17,8 @@
   },
   "dependencies": {
     "@apollo/server": "latest",
-    "@elysiajs/apollo": "latest",
-    "@pothos/core": "latest",
-    "@pothos/plugin-prisma": "latest",
-    "@prisma/client": "5.11.0",
-    "graphql": "latest"
+    "@prisma/client": "latest",
+    "graphql": "latest",
+    "hono": "latest"
   }
 }
