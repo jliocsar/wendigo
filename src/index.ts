@@ -1,20 +1,12 @@
-import { Hono } from "hono";
 import { cors } from "hono/cors";
 
-import { createApolloHandler } from "../lib/hono-apollo-graphql";
+import { apollo } from "../lib/hono-apollo-graphql";
 
-const app = new Hono();
-const apollo = await createApolloHandler({
+const app = await apollo({
   server: import("./server"),
-  context: async () => {
-    return {
-      shishi: "coco",
-    };
-  },
+  context: import("./context"),
 });
 
 app.use("/*", cors());
-
-app.mount("/graphql", apollo);
 
 export default app;

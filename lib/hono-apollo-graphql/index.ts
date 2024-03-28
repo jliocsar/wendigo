@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type HonoRequest } from "hono";
 import {
   ApolloServer,
   HeaderMap,
@@ -14,15 +14,31 @@ type ContextModule<Context extends BaseContext> = {
   context: ContextThunk<Context>;
 };
 
-type ApolloOptions<Context extends BaseContext> = {
+type ApolloOptions<
+  Path extends string = "/graphql",
+  Context extends BaseContext = BaseContext
+> = {
   server: Promise<ServerModule>;
+  app?: Hono;
+  path?: Path;
   context?: ContextThunk<Context> | Promise<ContextModule<Context>>;
 };
 
-export async function createApolloHandler<Context extends BaseContext>(
-  options: ApolloOptions<Context>
-) {
-  const app = new Hono();
+async function parseBody(req: HonoRequest) {
+  if (req.method !== "POST") {
+    return undefined;
+  }
+
+  const body = await req.json();
+  return body;
+}
+
+export async function apollo<
+  Path extends string = "/graphql",
+  Context extends BaseContext = BaseContext
+>(options: ApolloOptions<Path, Context>) {
+  const app = options.app ?? new Hono();
+  const path = options.path ?? "/graphql";
   const context = options.context
     ? options.context instanceof Promise
       ? (await options.context).context
@@ -31,12 +47,15 @@ export async function createApolloHandler<Context extends BaseContext>(
   let serverModule: ServerModule;
   let server: ApolloServer;
 
-  app.on(["GET", "POST"], "/", async (ctx) => {
+  app.on(["GET", "POST"], path, async (ctx) => {
+    const body = await parseBody(ctx.req);
+
     // lazy loads the server on the first request
     // TODO: this might be skippable if a header is present
     if (!serverModule) {
       serverModule = await options.server;
       server = serverModule.server;
+      server.assertStarted("Server failed to start");
     }
 
     const graphQLRequestHeaders = new HeaderMap();
@@ -52,11 +71,10 @@ export async function createApolloHandler<Context extends BaseContext>(
 
     const httpGraphQLRequest: HTTPGraphQLRequest = {
       headers: graphQLRequestHeaders,
-      method: ctx.req.method.toUpperCase(),
+      method: ctx.req.method,
       search: new URL(ctx.req.url).search ?? "",
-      body: await ctx.req.parseBody(),
+      body,
     };
-    server.assertStarted("Server failed to start");
     const res = await server.executeHTTPGraphQLRequest({
       httpGraphQLRequest,
       context,
@@ -80,5 +98,5 @@ export async function createApolloHandler<Context extends BaseContext>(
     });
   });
 
-  return app.fetch;
+  return app;
 }
