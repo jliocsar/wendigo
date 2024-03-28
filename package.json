@@ -19,6 +19,12 @@
     "@apollo/server": "latest",
     "@prisma/client": "latest",
     "graphql": "latest",
-    "hono": "latest"
-  }
+    "graphql-scalars": "latest",
+    "hono": "latest",
+    "reflect-metadata": "latest",
+    "type-graphql": "latest"
+  },
+  "trustedDependencies": [
+    "type-graphql"
+  ]
 }

@@ -14,6 +14,30 @@ This repository is a boilerplate for:
 - [Prisma][prisma-url]
 - [Zod][zod-url]
 
+## File Structure
+
+```
+lib/
+└── hono-apollo-graphql
+src/
+├── index.ts
+├── logger.ts
+├── apollo/
+│   ├── context.ts
+│   ├── schema.ts
+│   ├── server.ts
+│   └── index.ts
+├── db/
+│   └── client.ts
+└── modules/
+    └── {module_name}/
+        ├── {module_name}-service.ts
+        └── graphql/
+            ├── {module_name}-resolver.ts
+            └── types/
+                └── {type_name}.ts
+```
+
 ## Hono + GraphQL Integration
 
 - `lib/hono-apollo-graphql` exports the `apollo()` helper to bootstrap a [Hono](https://www.npmjs.com/package/hono) app, which then serves a [Apollo Server](https://www.npmjs.com/package/@apollo/server) under the `"/graphql"` path.
