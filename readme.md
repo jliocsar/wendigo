@@ -9,7 +9,7 @@
 This repository is a boilerplate for:
 
 - [Hono][hono-url]
-- [GraphQL (w/ Apollo)][apollo-url]
+- [Apollo GraphQL][apollo-url]
 - [Nexus](https://nexusjs.org/)
 - [PostgreSQL][postgres-url]
 - [Prisma][prisma-url] + [Kysely](https://kysely.dev/)
