@@ -1,13 +1,25 @@
 import { GraphQLString } from "graphql";
 
 import { createSubgraphSchema } from "../../lib/wendigo-graphql";
-import type { context } from "./context";
+import type { TContext } from "./context";
 
-export const schema = createSubgraphSchema<typeof context>({
+export const schema = createSubgraphSchema<TContext>({
   query: {
     hello: {
       type: GraphQLString,
-      resolve: (a, b, c) => c.shishi,
+      args: {
+        name: { type: GraphQLString },
+      },
+      resolve: (parent, args, ctx) => ctx.shishi,
+    },
+  },
+  mutation: {
+    hello: {
+      type: GraphQLString,
+      args: {
+        name: { type: GraphQLString },
+      },
+      resolve: (parent, args, ctx) => `Hello, ${args.name}!`,
     },
   },
 });

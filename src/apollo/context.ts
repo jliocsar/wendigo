@@ -3,3 +3,5 @@ export const context = async () => {
     shishi: "coco",
   };
 };
+
+export type TContext = typeof context;

@@ -6,19 +6,27 @@ import {
   type ThunkObjMap,
 } from "graphql";
 
-type TSchemaOptions<TContext extends ContextThunk, TArgs = any> = {
-  query?: ThunkObjMap<
-    GraphQLFieldConfig<unknown, Awaited<ReturnType<TContext>>, TArgs>
-  >;
-  mutation?: ThunkObjMap<
-    GraphQLFieldConfig<unknown, Awaited<ReturnType<TContext>>, TArgs>
-  >;
+type TOperation<TContext extends ContextThunk> = ThunkObjMap<
+  GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
+>;
+type TSchemaOptions<TContext extends ContextThunk> = {
+  query?: TOperation<TContext>;
+  mutation?: TOperation<TContext>;
 };
+
+// type TSchemaOptions<TContext extends ContextThunk> = {
+//   query?: ThunkObjMap<
+//     GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
+//   >;
+//   mutation?: ThunkObjMap<
+//     GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
+//   >;
+// };
 
 export function createSubgraphSchema<
   TContext extends ContextThunk,
-  TArgs = unknown
->(options: TSchemaOptions<TContext, TArgs>) {
+  TOptions extends TSchemaOptions<TContext> = TSchemaOptions<TContext>
+>(options: TOptions) {
   return new GraphQLSchema({
     ...(options.query && {
       query: new GraphQLObjectType({
