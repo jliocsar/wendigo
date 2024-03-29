@@ -18,25 +18,35 @@ This repository is a boilerplate for:
 
 ```
 lib/
-└── hono-apollo-graphql
+├── hono-apollo-graphql
+├── prisma-client
+├── wendigo-graphql
+└── types
 src/
 ├── index.ts
 ├── logger.ts
+├── setup.ts
 ├── apollo/
+│   ├── index.ts
 │   ├── context.ts
-│   ├── schema.ts
 │   ├── server.ts
-│   └── index.ts
+│   ├── schema.ts
+│   └── generated/
+│       ├── nexus-types.gen.ts
+│       └── schema.gen.graphql
 ├── db/
-│   └── client.ts
+│   ├── client.ts
+│   └── generated/
+│       └── types.ts
 └── modules/
     └── {module_name}/
         ├── {module_name}-service.ts
+        ├── {module_name}-types.ts
         └── graphql/
             ├── index.ts
-            ├── {module_name}-type.ts
+            ├── {module_name}-query.ts
             ├── {module_name}-mutation.ts
-            └── {module_name}-query.ts
+            └── {module_name}-type.ts
 ```
 
 ## Hono + GraphQL Integration
