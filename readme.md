@@ -1,7 +1,7 @@
 # 🧣 wendigo
 
 [![Hono][hono-badge]][hono-url]
-[![Apollo GraphQL][apollo-badge]][apollo-url] w/ [Nexus](https://nexusjs.org/)
+[![Apollo GraphQL][apollo-badge]][apollo-url]
 [![Prisma][prisma-badge]][prisma-url]
 [![PostgreSQL][postgres-badge]][postgres-url]
 [![Zod][zod-badge]][zod-url]
@@ -10,6 +10,7 @@ This repository is a boilerplate for:
 
 - [Hono][hono-url]
 - [GraphQL (w/ Apollo)][apollo-url]
+- [Nexus](https://nexusjs.org/)
 - [PostgreSQL][postgres-url]
 - [Prisma][prisma-url]
 - [Zod][zod-url]
