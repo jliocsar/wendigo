@@ -13,7 +13,7 @@ type TServerModule = {
   server: ApolloServer;
 };
 type TContextModule<TContext extends BaseContext> = {
-  context: ContextThunk<TContext>;
+  ctx: ContextThunk<TContext>;
 };
 type TSchemaModule = {
   schema: GraphQLSchema;
@@ -65,7 +65,7 @@ export async function apollo<
       gqlModule = await options.root;
       server = gqlModule.server;
       server.assertStarted("Server failed to start");
-      context = gqlModule.context ?? (async () => ({}));
+      context = gqlModule.ctx ?? (async () => ({}));
     }
 
     const graphQLRequestHeaders = new HeaderMap();

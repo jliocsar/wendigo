@@ -1,44 +1,43 @@
-import type { ContextThunk } from "@apollo/server";
-import {
-  GraphQLObjectType,
-  GraphQLSchema,
-  type GraphQLFieldConfig,
-  type ThunkObjMap,
-} from "graphql";
+import * as path from "node:path";
 
-type TOperation<TContext extends ContextThunk> = ThunkObjMap<
-  GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
+import { makeSchema as makeNexusSchema } from "nexus";
+import type { GraphQLSchemaExtensions } from "graphql";
+import type { NexusFeaturesInput, NexusPlugin } from "nexus/dist/core";
+import type { ContextThunk } from "@apollo/server";
+
+export type GraphQLContext<Context extends ContextThunk> = Awaited<
+  ReturnType<Context>
 >;
-type TSchemaOptions<TContext extends ContextThunk> = {
-  query?: TOperation<TContext>;
-  mutation?: TOperation<TContext>;
+
+type TMakeSchemaOptions<
+  TOutput extends string = string,
+  TTypes extends any[] = any[]
+> = {
+  types: TTypes;
+  output: TOutput;
+  extensions?: GraphQLSchemaExtensions;
+  features?: NexusFeaturesInput;
+  plugins?: NexusPlugin[];
 };
 
-// type TSchemaOptions<TContext extends ContextThunk> = {
-//   query?: ThunkObjMap<
-//     GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
-//   >;
-//   mutation?: ThunkObjMap<
-//     GraphQLFieldConfig<any, Awaited<ReturnType<TContext>>, any>
-//   >;
-// };
-
-export function createSubgraphSchema<
-  TContext extends ContextThunk,
-  TOptions extends TSchemaOptions<TContext> = TSchemaOptions<TContext>
->(options: TOptions) {
-  return new GraphQLSchema({
-    ...(options.query && {
-      query: new GraphQLObjectType({
-        name: "RootQueryType",
-        fields: options.query,
-      }),
-    }),
-    ...(options.mutation && {
-      mutation: new GraphQLObjectType({
-        name: "RootMutationType",
-        fields: options.mutation,
-      }),
-    }),
+export function makeSchema<TOptions extends TMakeSchemaOptions>(
+  options: TOptions
+) {
+  const { output, types } = options;
+  const schema = makeNexusSchema({
+    types,
+    extensions: options.extensions,
+    features: options.features,
+    plugins: options.plugins,
+    contextType: {
+      module: path.resolve(output, "context.ts"),
+      export: "TContext",
+    },
+    outputs: {
+      schema: path.resolve(output, "generated/schema.gen.graphql"),
+      typegen: path.resolve(output, "generated/nexus-types.gen.ts"),
+    },
   });
+
+  return schema;
 }

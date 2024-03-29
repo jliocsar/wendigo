@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+/// This is a user!
+model User {
+  /// This is an id!
+  id String @id
+}

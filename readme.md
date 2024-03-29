@@ -1,7 +1,7 @@
 # 🧣 wendigo
 
 [![Hono][hono-badge]][hono-url]
-[![Apollo GraphQL][apollo-badge]][apollo-url]
+[![Apollo GraphQL][apollo-badge]][apollo-url] w/ [Nexus](https://nexusjs.org/)
 [![Prisma][prisma-badge]][prisma-url]
 [![PostgreSQL][postgres-badge]][postgres-url]
 [![Zod][zod-badge]][zod-url]
@@ -33,9 +33,10 @@ src/
     └── {module_name}/
         ├── {module_name}-service.ts
         └── graphql/
-            ├── {module_name}-resolver.ts
-            └── types/
-                └── {type_name}.ts
+            ├── index.ts
+            ├── {module_name}-type.ts
+            ├── {module_name}-mutation.ts
+            └── {module_name}-query.ts
 ```
 
 ## Hono + GraphQL Integration

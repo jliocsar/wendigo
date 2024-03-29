@@ -1,7 +1,8 @@
-export const context = async () => {
-  return {
-    shishi: "coco",
-  };
+import type { GraphQLContext } from "../../lib/wendigo-graphql";
+import { prisma } from "../db/client";
+
+export const ctx = async () => {
+  return { prisma };
 };
 
-export type TContext = typeof context;
+export type TContext = GraphQLContext<typeof ctx>;

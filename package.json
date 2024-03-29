@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run --bun --watch src/index.ts",
+    "dev": "bun run generate && bun run --bun --watch src/index.ts",
+    "generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
@@ -19,6 +20,8 @@
     "@apollo/server": "latest",
     "@prisma/client": "latest",
     "graphql": "latest",
-    "hono": "latest"
+    "hono": "latest",
+    "nexus": "latest",
+    "nexus-prisma": "latest"
   }
 }
