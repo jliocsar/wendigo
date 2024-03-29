@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run generate && bun run --bun --watch src/index.ts",
+    "dev": "conc 'prisma generate --watch' 'bun run --bun --watch src/index.ts'",
+    "watch": "bun run --bun --watch src/index.ts",
     "generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
@@ -11,6 +12,7 @@
   "devDependencies": {
     "@jliocsar/tarsier": "latest",
     "@types/bun": "latest",
+    "concurrently": "latest",
     "prisma": "latest"
   },
   "peerDependencies": {
