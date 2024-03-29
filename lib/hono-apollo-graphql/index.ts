@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { Hono, type HonoRequest } from "hono";
 import { cors } from "hono/cors";
 import {
@@ -8,23 +7,28 @@ import {
   type HTTPGraphQLRequest,
   type BaseContext,
 } from "@apollo/server";
+import type { GraphQLSchema } from "graphql";
 
-type ServerModule = {
+type TServerModule = {
   server: ApolloServer;
 };
-type ContextModule<Context extends BaseContext> = {
-  context: ContextThunk<Context>;
+type TContextModule<TContext extends BaseContext> = {
+  context: ContextThunk<TContext>;
 };
-type GraphQLModule<Context extends BaseContext> = ServerModule &
-  ContextModule<Context>;
+type TSchemaModule = {
+  schema: GraphQLSchema;
+};
+type TGraphQLModule<TContext extends BaseContext> = TServerModule &
+  TSchemaModule &
+  TContextModule<TContext>;
 
-type ApolloOptions<
-  Path extends string = "/graphql",
-  Context extends BaseContext = BaseContext
+type TApolloOptions<
+  TPath extends string = "/graphql",
+  TContext extends BaseContext = BaseContext
 > = {
   app?: Hono;
-  path?: Path;
-  root: Promise<GraphQLModule<Context>>;
+  path?: TPath;
+  root: Promise<TGraphQLModule<TContext>>;
 };
 
 async function parseBody(req: HonoRequest) {
@@ -37,9 +41,9 @@ async function parseBody(req: HonoRequest) {
 }
 
 export async function apollo<
-  Path extends string = "/graphql",
-  Context extends BaseContext = BaseContext
->(options: ApolloOptions<Path, Context>) {
+  TPath extends string = "/graphql",
+  TContext extends BaseContext = BaseContext
+>(options: TApolloOptions<TPath, TContext>) {
   let app = options.app;
 
   if (!app) {
@@ -48,8 +52,8 @@ export async function apollo<
   }
 
   const path = options.path ?? "/graphql";
-  let context: ContextThunk<Context>;
-  let gqlModule: GraphQLModule<Context>;
+  let context: ContextThunk<TContext>;
+  let gqlModule: TGraphQLModule<TContext>;
   let server: ApolloServer;
 
   app.on(["GET", "POST"], path, async (ctx) => {

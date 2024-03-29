@@ -1,5 +1,3 @@
-import type { NewUserInput } from "./graphql/types/user";
-
 export class UserService {
   private readonly users = [
     { id: 1, firstName: "John", lastName: "Doe" },
