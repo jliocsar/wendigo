@@ -1,10 +1,16 @@
-import { inputObjectType, intArg, nonNull, queryField, queryType } from "nexus";
+import { nonNull, queryField, stringArg } from "nexus";
+
+import { userService } from "../users-service";
 
 export const usersQuery = queryField((t) => {
   t.nonNull.list.nonNull.field("users", {
     type: "User",
-    resolve(_, __, ctx) {
-      return ctx.prisma.user.findMany();
+    args: {
+      skip: "Int",
+      take: "Int",
+    },
+    resolve(_, { skip, take }, ctx) {
+      return userService.findAll({ skip, take });
     },
   });
 });
@@ -13,20 +19,10 @@ export const userQueryField = queryField((t) => {
   t.nullable.field("user", {
     type: "User",
     args: {
-      id: nonNull(intArg()),
+      id: nonNull(stringArg()),
     },
     resolve(_, { id }, ctx) {
-      return ctx.prisma.user.findUnique({
-        where: { id: id.toString() },
-      });
+      return userService.findById(id);
     },
   });
-});
-
-export const userCreateInput = inputObjectType({
-  name: "UserCreateInput",
-  definition(t) {
-    t.nonNull.string("name");
-    t.nonNull.string("email");
-  },
 });

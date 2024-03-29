@@ -1,15 +1,21 @@
 import { mutationField } from "nexus";
 
-export const CreateUserMutation = mutationField((t) => {
+import { userService } from "../users-service";
+
+export const createUserMutation = mutationField((t) => {
   t.nonNull.field("createUser", {
     type: "User",
     args: {
-      // data: "UserCreateInput",
+      data: "CreateUserInput",
     },
     resolve(_, { data }, ctx) {
-      return ctx.prisma.user.create({
-        data,
-      });
+      return userService.create(data);
+      // return ctx.prisma.user.create({
+      //   data,
+      //   select: {
+      //     id: true,
+      //   },
+      // });
     },
   });
 });
