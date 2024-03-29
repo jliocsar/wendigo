@@ -9,7 +9,8 @@ class UserService {
       .selectFrom("User")
       .selectAll()
       .where("id", "=", id);
-    return query.execute();
+    const [user] = await query.execute();
+    return user;
   }
 
   async findAll({
