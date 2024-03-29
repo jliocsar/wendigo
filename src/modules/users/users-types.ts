@@ -1,4 +1,4 @@
-import type { FieldType } from "nexus";
+import type { User } from "../../db/generated/types";
 
-export type TCreateUserInput = FieldType<"Mutation", "createUser">;
-export type TUser = NonNullable<FieldType<"Query", "user">>;
+export type TUser = User;
+export type TCreateUserInput = Required<TUser>;

@@ -1,3 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "../../lib/prisma-client";
+import type { DB } from "./generated/types";
 
-export const prisma = new PrismaClient();
+export const prisma = createPrismaClient<DB>();

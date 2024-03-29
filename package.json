@@ -13,7 +13,8 @@
     "@jliocsar/tarsier": "latest",
     "@types/bun": "latest",
     "concurrently": "latest",
-    "prisma": "latest"
+    "prisma": "latest",
+    "prisma-kysely": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -23,7 +24,9 @@
     "@prisma/client": "latest",
     "graphql": "latest",
     "hono": "latest",
+    "kysely": "latest",
     "nexus": "latest",
-    "nexus-prisma": "latest"
+    "nexus-prisma": "latest",
+    "prisma-extension-kysely": "latest"
   }
 }
