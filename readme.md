@@ -12,7 +12,7 @@ This repository is a boilerplate for:
 - [GraphQL (w/ Apollo)][apollo-url]
 - [Nexus](https://nexusjs.org/)
 - [PostgreSQL][postgres-url]
-- [Prisma][prisma-url]
+- [Prisma][prisma-url] + [Kysely](https://kysely.dev/)
 - [Zod][zod-url]
 
 ## File Structure
