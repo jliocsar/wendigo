@@ -3,10 +3,10 @@ generator client {
 }
 
 generator kysely {
-    provider = "prisma-kysely"
-    output = "../src/db/generated"
-    fileName = "types.ts"
-    enumFileName = "enums.ts"
+  provider     = "prisma-kysely"
+  output       = "../src/db/generated"
+  fileName     = "types.ts"
+  enumFileName = "enums.ts"
 }
 
 generator nexusPrisma {
@@ -21,5 +21,11 @@ datasource db {
 /// This is a user!
 model User {
   /// This is an id!
-  id String @id
+  id        String    @id
+  /// This is a name!
+  firstName String
+  lastName  String?
+  /// Metadata!
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }

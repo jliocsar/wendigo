@@ -3,6 +3,13 @@ import * as colorette from "colorette"; // available due to ^
 
 export const logger = tarsier({
   types: {
+    debug: {
+      prefix: "🐛",
+      color: {
+        foreground: Color.Foreground.CyanBright,
+      },
+      disabled: process.env.DEBUG !== "1" && process.env.DEBUG !== "true",
+    },
     start: {
       prefix: "🚀",
       color: {

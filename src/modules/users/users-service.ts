@@ -33,6 +33,19 @@ class UserService {
     return query.execute();
   }
 
+  async update(id: string, data: Nullable<TCreateUserInput>) {
+    if (!data) {
+      throw new Error("Invalid data");
+    }
+    const [user] = await prisma.$kysely
+      .updateTable("User")
+      .set(data)
+      .where("id", "=", id)
+      .returningAll()
+      .execute();
+    return user;
+  }
+
   async create(data?: Nullable<TCreateUserInput>) {
     if (!data) {
       throw new Error("Invalid data");
@@ -40,7 +53,7 @@ class UserService {
     const [user] = await prisma.$kysely
       .insertInto("User")
       .values(data)
-      .returning(["id"])
+      .returningAll()
       .execute();
     return user;
   }

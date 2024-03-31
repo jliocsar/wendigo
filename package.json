@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "conc 'prisma generate --watch' 'bun run --bun --watch src/index.ts'",
     "watch": "bun run --bun --watch src/index.ts",
-    "generate": "prisma generate",
+    "generate": "prisma generate && bun run --bun src/generate-schema.ts",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },

@@ -1,10 +1,11 @@
 import * as path from "node:path";
 import { Glob } from "bun";
 
-import { extendType, makeSchema as makeNexusSchema, queryType } from "nexus";
+import { makeSchema as makeNexusSchema } from "nexus";
 import type { GraphQLSchemaExtensions } from "graphql";
 import type { NexusFeaturesInput, NexusPlugin } from "nexus/dist/core";
 import type { ContextThunk } from "@apollo/server";
+import * as scalar from "./scalar";
 
 export type GraphQLContext<Context extends ContextThunk> = Awaited<
   ReturnType<Context>
@@ -36,6 +37,11 @@ export async function makeSchema<TOptions extends TMakeSchemaOptions>(
     for (const value of values) {
       types.push(value);
     }
+  }
+
+  const scalars = Object.values(scalar);
+  for (const scalar of scalars) {
+    types.push(scalar);
   }
 
   const schema = makeNexusSchema({

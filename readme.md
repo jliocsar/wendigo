@@ -24,6 +24,7 @@ lib/
 └── types
 src/
 ├── index.ts
+├── generate-schema.ts
 ├── logger.ts
 ├── setup.ts
 ├── apollo/
